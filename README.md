@@ -5,7 +5,7 @@ Zadanie pierwsze z kursu Systemy Operacyjne 2 Projekt.
 
 Temat: Problem ucztujących filozofów.
 
-Treść zadania: [a link](http://jaroslaw.rudy.staff.iiar.pwr.wroc.pl/so2p.php)
+Treść zadania: [Systemy Operacyjne - dr inż. Jarosław Rudy](http://jaroslaw.rudy.staff.iiar.pwr.wroc.pl/so2p.php)
 
 
 \[English\]
