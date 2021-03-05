@@ -2,7 +2,7 @@
 #define FORK_H
 #pragma once
 	
-class fork  
+class stick  
 {
 	private:
 		static int id_counter;
@@ -10,12 +10,12 @@ class fork
 		int philosopher_id;
 
 	public:
-		fork();
-		~fork();
+		explicit stick();
 
 		int get_id();
 		int get_philosophers_id();
-		void set_philosopher(const int &philosophers_id);
+		void set_philosopher(int philosophers_id);
 		void release_fork();
+
 };
 #endif

@@ -1,14 +1,17 @@
 #include <iostream>
 #include <ncurses.h>
 
-#include "philosoph/philosoph.hpp"
+#include "philosopher/philosopher.hpp"
+#include "stick/stick.hpp"
 
 #include <thread>
 
 int main()
 {
-    philosoph p;
-    philosoph c;
+    srand (time(NULL));
+    stick f1, f2, f3;
+    philosopher p(f1, f2);
+    philosopher c(f2, f3);
     // cin.clear();
     // cin.ignore(numeric_limits<streamsize>::max(), '\n');
     // getch();
