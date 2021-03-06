@@ -5,12 +5,12 @@ using namespace std;
 int philosopher::id_counter = 0;
 bool philosopher::the_feast_continues = true;
 
-philosopher::philosopher(stick left, stick right)
+philosopher::philosopher(stick &left, stick &right)
 {
     id = id_counter++;
     filling_points = 0;
 
-    this->forks = left.get_id() < right.get_id() ? make_pair(left, right) : make_pair(right, left);
+    this->forks = left.get_id() < right.get_id() ? make_pair(&left, &right) : make_pair(&right, &left);
 
     std::thread t(&philosopher::run, this);
     this->exist = std::move(t);
@@ -20,6 +20,8 @@ philosopher::philosopher(stick left, stick right)
 philosopher::~philosopher()
 {
     the_feast_continues = false;
+    forks.first->release();
+    forks.second->release();
     exist.join();
 }
 
@@ -31,14 +33,23 @@ void philosopher::run()
         {
             case MEDITATION:
             {
-                std::this_thread::sleep_for(rand_meditation_time());
-                //TODO
+                std::this_thread::sleep_for( meditation_time() );
+                filling_points = 0;
+                forks.first->use(id);
+                forks.second->use(id);
                 stt = EATING;
                 break;
             }
             case EATING:
             {
-                //TODO
+           		std::chrono::milliseconds eating_time = get_eating_time();
+                while( filling_points < max_filling_points)
+                {
+                    std::this_thread::sleep_for( eating_time );
+                    ++filling_points;
+                }
+                forks.first->release();
+                forks.second->release();
                 stt = MEDITATION;
                 break;
             }
@@ -48,6 +59,11 @@ void philosopher::run()
 
 int philosopher::get_id(){
     return id;
+}
+
+unsigned short philosopher::get_filling_points()
+{
+    return filling_points;
 }
 
 std::string philosopher::get_state()
@@ -63,7 +79,12 @@ std::string philosopher::get_state()
     }
 }
 
-std::chrono::milliseconds philosopher::rand_meditation_time()
+std::chrono::milliseconds philosopher::meditation_time()
 {
     return std::chrono::milliseconds(rand() % 2000 + 2500);
+}
+
+std::chrono::milliseconds philosopher::get_eating_time()
+{
+    return std::chrono::milliseconds((rand() % 2000 + 2500) / max_filling_points);
 }

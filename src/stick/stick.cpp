@@ -15,10 +15,12 @@ int stick::get_philosophers_id() {
     return philosopher_id;
 }
 
-void stick::set_philosopher(int philosophers_id) {
+void stick::use(int philosophers_id) {
+    mtx.lock();
     this->philosopher_id = philosophers_id;
 }
 
-void stick::release_fork() {
+void stick::release() {
+    mtx.unlock();
     philosopher_id = -1;
 }
