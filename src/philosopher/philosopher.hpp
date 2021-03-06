@@ -3,7 +3,6 @@
 #pragma once
 
 #include <cstdlib>
-#include <string>
 #include <thread>
 #include <utility>
 #include <unistd.h>
@@ -36,7 +35,7 @@ class philosopher
 		int get_id();
 		unsigned short get_filling_points();
 
-		std::string get_state();
+		state get_state();
 		std::chrono::milliseconds meditation_time();
 		std::chrono::milliseconds get_eating_time();
 };

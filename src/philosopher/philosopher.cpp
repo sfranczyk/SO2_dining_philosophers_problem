@@ -9,10 +9,8 @@ philosopher::philosopher(stick &left, stick &right)
 {
     id = id_counter++;
     filling_points = 0;
-
     this->forks = left.get_id() < right.get_id() ? make_pair(&left, &right) : make_pair(&right, &left);
-
-    std::thread t(&philosopher::run, this);
+    std::thread t(&philosopher::run, this); 
     this->exist = std::move(t);
     stt = MEDITATION;
 }
@@ -66,17 +64,9 @@ unsigned short philosopher::get_filling_points()
     return filling_points;
 }
 
-std::string philosopher::get_state()
+state philosopher::get_state()
 {
-    switch(stt)
-    {
-        case MEDITATION:
-            return "meditate";
-        case EATING:
-            return "eating";
-        default:
-            return "err";
-    }
+    return stt;
 }
 
 std::chrono::milliseconds philosopher::meditation_time()

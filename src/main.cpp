@@ -52,22 +52,23 @@ int main()
 
         for( int i = 0; i < number_philosophers; ++i)
         {
-            std::string state = philosophers[i]->get_state();
-            std::string text = "Philosopher " + std::to_string(philosophers[i]->get_id()) + " => " + state;
-            if(state == eat)
+            philosopher * _philosopher = philosophers[i];
+            state stt = _philosopher->get_state();
+            std::string text = "Philosopher " + std::to_string(_philosopher->get_id()) + (stt == MEDITATION ? " meditates" : " eating");
+            if(stt == EATING)
             {
                 printstr_colored(1, i, 0, text.c_str());
 
                 attron( COLOR_PAIR( 2 ) );
                 addstr(" : \0");
-                for( int j = 0; j < philosophers[i]->get_filling_points(); ++j)
+                for( int j = 0; j < _philosopher->get_filling_points(); ++j)
                     addch('|');
                 attroff( COLOR_PAIR( 2 ) );
 
-                for(int j = philosophers[i]->get_filling_points(); j < philosopher::max_filling_points; ++j)
+                for(int j = _philosopher->get_filling_points(); j < philosopher::max_filling_points; ++j)
                     addch('|');
 
-                text = " [" + std::to_string(philosophers[i]->get_filling_points()) + " / " + std::to_string(philosopher::max_filling_points) + "]";
+                text = " [" + std::to_string(_philosopher->get_filling_points()) + " / " + std::to_string(philosopher::max_filling_points) + "]";
                 addstr(text.c_str());
             }
             else
