@@ -35,8 +35,20 @@ int main()
     init_pair( 3, COLOR_BLACK, COLOR_RED );
 
     clear();
-    printw( "Enter the number of philosophers at the feast: ");
-    scanw("%d", &number_philosophers);
+    printw( "How many philosophers you want to invite to the feast: ");
+    while (scanw("%d", &number_philosophers) != 1)
+    {
+        printw( "While writing invitations, a large blot flooded the number of invited philosophers. You have to remember how many you wanted to invite them and enter the correct number.\n");
+        printw( "How many philosophers you want to invite to the feast: ");
+    }
+    if( number_philosophers < 5)
+    {
+        printw( "Too few philosophers have been invited. Fortunately, no one was guarding the entrance. As a result, %d more philosophers could invite to the feast. ", 5 - number_philosophers);
+        number_philosophers = 5;
+    }
+    flushinp();
+    printw( "\nPress any key... ");
+    getch();
 
     stick ** sticks = new stick*[number_philosophers];
     for( int i = 0; i < number_philosophers; ++i)
@@ -79,7 +91,7 @@ int main()
         for( int i = 0; i < number_philosophers; ++i)
         {
             std::string text = "Fork " + std::to_string(sticks[i]->get_id());
-            text += sticks[i]->get_philosophers_id() > -1 ? ": used by " + std::to_string(sticks[i]->get_philosophers_id()) : ": is unused";
+            text += sticks[i]->get_philosophers_id() > -1 ? ": used by Philosopher " + std::to_string(sticks[i]->get_philosophers_id()) : ": is unused";
 
             printstr_colored(sticks[i]->get_philosophers_id() == -1 ? 3 : 2, i + 1 + number_philosophers, 0, text.c_str());
         }
@@ -89,8 +101,11 @@ int main()
 
     }while(!kill);
     exit.join();
-
-    endwin();
+    
+    clear();
+    printw( "The feast is over.\nPress any key... ");
+    refresh();
+    flushinp();
 
     for( int i = 0; i < number_philosophers; ++i)
         delete philosophers[i];
@@ -99,4 +114,8 @@ int main()
     for( int i = 0; i < number_philosophers; ++i)
         delete sticks[i];
     delete [] sticks;
+
+    getch();
+
+    endwin();
 }
