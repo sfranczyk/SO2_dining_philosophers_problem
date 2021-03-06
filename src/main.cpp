@@ -43,7 +43,7 @@ int main()
     }
     if( number_philosophers < 5)
     {
-        printw( "Too few philosophers have been invited. Fortunately, no one was guarding the entrance. As a result, %d more philosophers could invite to the feast. ", 5 - number_philosophers);
+        printw( "Too few philosophers have been invited. Fortunately, no one was guarding the entrance. As a result, %d more philosophers could drop in without an invitation to the feast. ", 5 - number_philosophers);
         number_philosophers = 5;
     }
     flushinp();
