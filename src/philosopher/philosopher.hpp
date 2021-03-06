@@ -2,7 +2,6 @@
 #define PHILOSOPHER_H
 #pragma once
 
-#include <cstdlib>
 #include <thread>
 #include <utility>
 #include <unistd.h>
@@ -34,8 +33,8 @@ class philosopher
 
 		int get_id();
 		unsigned short get_filling_points();
-
 		state get_state();
+
 		std::chrono::milliseconds meditation_time();
 		std::chrono::milliseconds get_eating_time();
 };

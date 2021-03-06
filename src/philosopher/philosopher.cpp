@@ -55,7 +55,8 @@ void philosopher::run()
     }
 }
 
-int philosopher::get_id(){
+int philosopher::get_id()
+{
     return id;
 }
 
