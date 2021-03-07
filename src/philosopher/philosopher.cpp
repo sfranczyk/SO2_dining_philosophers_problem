@@ -9,9 +9,11 @@ philosopher::philosopher(stick &left, stick &right)
 {
     id = id_counter++;
     filling_points = 0;
+    sleeping_points = max_sleeping_points;
     this->forks = left.get_id() < right.get_id() ? make_pair(&left, &right) : make_pair(&right, &left);
     std::thread t(&philosopher::run, this); 
     this->exist = std::move(t);
+    sleep_time = std::chrono::milliseconds(50);
     stt = MEDITATION;
 }
 	
@@ -27,32 +29,41 @@ void philosopher::run()
 {
     while(the_feast_continues)
     {
+        std::this_thread::sleep_for( sleep_time );
         switch(stt)
         {
             case MEDITATION:
-            {
-                std::this_thread::sleep_for( meditation_time() );
-                filling_points = 0;
-                forks.first->use(id);
-                forks.second->use(id);
-                stt = EATING;
-                break;
-            }
-            case EATING:
-            {
-           		std::chrono::milliseconds eating_time = get_eating_time();
-                while( filling_points < max_filling_points)
+                if( !phase(sleeping_points, max_sleeping_points, filling_points) )
                 {
-                    std::this_thread::sleep_for( eating_time );
-                    ++filling_points;
+                    forks.first->use(id);
+                    forks.second->use(id);
+                    stt = EATING;
                 }
-                forks.first->release();
-                forks.second->release();
-                stt = MEDITATION;
                 break;
-            }
+            case EATING:
+                if( !phase(filling_points, max_filling_points, sleeping_points) )
+                {
+                    forks.first->release();
+                    forks.second->release();
+                    stt = MEDITATION;
+                }
+                break;
         }
     }
+}
+
+bool philosopher::phase(unsigned short& up_points, const unsigned short max_up_points, unsigned short& reset_points) 
+{
+    if(up_points++ < max_up_points)
+        return true;
+    reset_points = 0;
+    sleep_time = get_waiting_time(max_up_points);
+    return false;           
+}
+
+state philosopher::get_state()
+{
+    return stt;
 }
 
 int philosopher::get_id()
@@ -65,17 +76,7 @@ unsigned short philosopher::get_filling_points()
     return filling_points;
 }
 
-state philosopher::get_state()
+std::chrono::milliseconds philosopher::get_waiting_time(const int & divider )
 {
-    return stt;
-}
-
-std::chrono::milliseconds philosopher::meditation_time()
-{
-    return std::chrono::milliseconds(rand() % 2000 + 2500);
-}
-
-std::chrono::milliseconds philosopher::get_eating_time()
-{
-    return std::chrono::milliseconds((rand() % 2000 + 2500) / max_filling_points);
+    return std::chrono::milliseconds((rand() % 2000 + 2500) / divider);
 }

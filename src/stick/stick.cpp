@@ -7,15 +7,11 @@ stick::stick() {
     philosopher_id = -1;
 }
 
-int stick::get_id() {
-    return id;
+stick::~stick() {
+    mtx.unlock();
 }
 
-int stick::get_philosophers_id() {
-    return philosopher_id;
-}
-
-void stick::use(int philosophers_id) {
+void stick::use(const int &philosophers_id) {
     mtx.lock();
     this->philosopher_id = philosophers_id;
 }
@@ -24,3 +20,12 @@ void stick::release() {
     mtx.unlock();
     philosopher_id = -1;
 }
+
+int stick::get_id() {
+    return id;
+}
+
+int stick::get_philosophers_id() {
+    return philosopher_id;
+}
+

@@ -6,7 +6,6 @@
 #include "philosopher/philosopher.hpp"
 #include "stick/stick.hpp"
 
-
 void exiter(bool &kill)
 {
     while(getch() != 'q' && getch() != 'Q');
@@ -23,7 +22,7 @@ void printstr_colored(const int &color_id, const int &row, const int &col, const
 int main()
 {
     srand (time(NULL));
-    std::string eat = "eating";
+    const std::chrono::milliseconds refresh_freq = std::chrono::milliseconds(50);
     int number_philosophers;
     bool kill = false;
 
@@ -90,14 +89,12 @@ int main()
         }
         for( int i = 0; i < number_philosophers; ++i)
         {
-            std::string text = "Fork " + std::to_string(sticks[i]->get_id());
-            text += sticks[i]->get_philosophers_id() > -1 ? ": used by Philosopher " + std::to_string(sticks[i]->get_philosophers_id()) : ": is unused";
-
+            std::string text = "Fork " + std::to_string(sticks[i]->get_id()) + (sticks[i]->get_philosophers_id() > -1 ? ": used by Philosopher " + std::to_string(sticks[i]->get_philosophers_id()) : ": is unused");
             printstr_colored(sticks[i]->get_philosophers_id() == -1 ? 3 : 2, i + 1 + number_philosophers, 0, text.c_str());
         }
         addstr("\n\nPress [Q] to end the program\n\0");
         refresh();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(refresh_freq);
 
     }while(!kill);
     exit.join();
