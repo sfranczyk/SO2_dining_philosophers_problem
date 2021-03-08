@@ -6,21 +6,24 @@
 #include "philosopher/philosopher.hpp"
 #include "stick/stick.hpp"
 
-void exiter(bool &kill)
-{
+void exiter(bool &kill){
     while(getch() != 'q' && getch() != 'Q');
     kill = true;
 }
 
-void printstr_colored(const int &color_id, const int &row, const int &col, const char str[])
-{
+void printstr_colored(const int &color_id, const int &row, const int &col, const char str[]){
     attron( COLOR_PAIR( color_id ) );
     mvprintw( row, col, str );
     attroff( COLOR_PAIR( color_id ) );
 }
 
-int main()
-{
+void printstr_colored(const int &color_id, const char str[]){
+    attron( COLOR_PAIR( color_id ) );
+    addstr(str);
+    attroff( COLOR_PAIR( color_id ) );
+}
+
+int main(){
     srand (time(NULL));
     const std::chrono::milliseconds refresh_freq = std::chrono::milliseconds(50);
     int number_philosophers;
@@ -42,11 +45,11 @@ int main()
     }
     if( number_philosophers < 5)
     {
-        printw( "Too few philosophers have been invited. Fortunately, no one was guarding the entrance. As a result, %d more philosophers could drop in without an invitation to the feast. ", 5 - number_philosophers);
+        printw( "Too few philosophers have been invited. Fortunately, no one was guarding the entrance. As a result, %d more philosophers could drop in without an invitation to the feast.\n", 5 - number_philosophers);
         number_philosophers = 5;
     }
     flushinp();
-    printw( "\nPress any key... ");
+    printw( "Press any key... ");
     getch();
 
     stick ** sticks = new stick*[number_philosophers];
@@ -60,32 +63,18 @@ int main()
     std::thread exit(exiter, std::ref(kill));
     do{
         clear();
-
         for( int i = 0; i < number_philosophers; ++i)
         {
             philosopher * _philosopher = philosophers[i];
-            state stt = _philosopher->get_state();
-            std::string text = "Philosopher " + std::to_string(_philosopher->get_id()) + (stt == MEDITATION ? " meditates" : " eating");
-            if(stt == EATING)
+            if(_philosopher->get_state() == EATING)
             {
-                printstr_colored(1, i, 0, text.c_str());
-
-                attron( COLOR_PAIR( 2 ) );
-                addstr(" : \0");
-                for( int j = 0; j < _philosopher->get_filling_points(); ++j)
-                    addch('|');
-                attroff( COLOR_PAIR( 2 ) );
-
-                for(int j = _philosopher->get_filling_points(); j < philosopher::max_filling_points; ++j)
-                    addch('|');
-
-                text = " [" + std::to_string(_philosopher->get_filling_points()) + " / " + std::to_string(philosopher::max_filling_points) + "]";
-                addstr(text.c_str());
+                printstr_colored(1, i, 0, ( "Philosopher " + std::to_string( _philosopher->get_id() ) + " eating" ).c_str() );
+                printstr_colored(2, std::string( " : " + std::string( _philosopher->get_filling_points(), '|' ) ).c_str() );
+                addstr(std::string( philosopher::max_filling_points - _philosopher->get_filling_points(), '|' ).c_str() );
+                addstr((" [" + std::to_string(_philosopher->get_filling_points()) + " / " + std::to_string(philosopher::max_filling_points) + "]").c_str());
             }
             else
-            {
-                printstr_colored(3, i, 0, text.c_str());
-            }
+                printstr_colored(3, i, 0, ("Philosopher " + std::to_string( _philosopher->get_id() ) + " meditates").c_str());
         }
         for( int i = 0; i < number_philosophers; ++i)
         {
@@ -95,7 +84,6 @@ int main()
         addstr("\n\nPress [Q] to end the program\n\0");
         refresh();
         std::this_thread::sleep_for(refresh_freq);
-
     }while(!kill);
     exit.join();
     

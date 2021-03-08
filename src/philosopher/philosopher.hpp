@@ -38,6 +38,6 @@ class philosopher
 		unsigned short filling_points;
 
 		void run();
-		bool phase(unsigned short &up_points, const unsigned short max_up_points, unsigned short &reset_points);
+		bool phase(unsigned short &up_points, const unsigned short max_up_points);
 };
 #endif
