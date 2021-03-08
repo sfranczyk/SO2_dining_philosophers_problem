@@ -10,6 +10,6 @@ Treść zadania: [Systemy Operacyjne - dr inż. Jarosław Rudy](http://jaroslaw.
 
 \[English\]
 
-First excersise form course Operating system 2 - Project.
+First excersise form course Operating Systems 2 - Project.
 
 Topic: Dining philosopher problem.
