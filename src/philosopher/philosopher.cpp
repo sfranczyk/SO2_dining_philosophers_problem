@@ -7,7 +7,7 @@ philosopher::philosopher(stick &left, stick &right){
     id = id_counter++;
     filling_points = 0;
     sleeping_points = max_sleeping_points;
-    this->forks = left.get_id() < right.get_id() ? make_pair(&left, &right) : make_pair(&right, &left);
+    this->forks = left.get_id() < right.get_id() ? std::make_pair(&left, &right) : std::make_pair(&right, &left);
     std::thread t(&philosopher::run, this); 
     this->exist = std::move(t);
     sleep_time = std::chrono::milliseconds(50);
