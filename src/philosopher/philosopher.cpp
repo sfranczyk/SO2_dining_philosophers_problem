@@ -1,7 +1,5 @@
 #include "philosopher.hpp"
 
-using namespace std;
-
 int philosopher::id_counter = 0;
 bool philosopher::the_feast_continues = true;
 
