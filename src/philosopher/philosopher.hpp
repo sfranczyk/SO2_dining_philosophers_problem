@@ -9,7 +9,7 @@
 
 #include "../stick/stick.hpp"
 
-enum state {MEDITATION, EATING};
+enum state {THINKING, EATING};
 
 class philosopher 
 {
